@@ -30,21 +30,12 @@ namespace NoSenseTask
 
             }
 
-
-
             dataInt.ThisDoesNotMakeAnySense(item => ((item > 9) && (item < 100)), item =>
             {
-                item = 0;
                 Console.WriteLine(Convert.ToString(item) + "\tAction applied!");
+                item = 0;
             });
-
-            /*
-            Console.WriteLine();
-            foreach (var item in dataInt)
-            {
-                Console.Write(Convert.ToString(item) + ' ');
-            }
-            */
+            
             Console.ReadLine();
 
         }
@@ -61,9 +52,7 @@ namespace NoSenseTask
                 Console.WriteLine("BAD");
                 throw new ArgumentNullException("Input data is null!\n");
             }
-
-
-
+            
             foreach (var item in IEnum)
             {
                 if (!predicate(item))
