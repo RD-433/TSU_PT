@@ -1,1 +1,6 @@
 E:\win7_temp\data\TSU\TSU 2020 - 2021 I\TSU_PT\NoSenseTask\NoSenseTask\bin\Debug\NoSenseTask.exe.config
+E:\win7_temp\data\TSU\TSU 2020 - 2021 I\TSU_PT\NoSenseTask\NoSenseTask\bin\Debug\NoSenseTask.exe
+E:\win7_temp\data\TSU\TSU 2020 - 2021 I\TSU_PT\NoSenseTask\NoSenseTask\bin\Debug\NoSenseTask.pdb
+E:\win7_temp\data\TSU\TSU 2020 - 2021 I\TSU_PT\NoSenseTask\NoSenseTask\obj\Debug\NoSenseTask.csprojResolveAssemblyReference.cache
+E:\win7_temp\data\TSU\TSU 2020 - 2021 I\TSU_PT\NoSenseTask\NoSenseTask\obj\Debug\NoSenseTask.exe
+E:\win7_temp\data\TSU\TSU 2020 - 2021 I\TSU_PT\NoSenseTask\NoSenseTask\obj\Debug\NoSenseTask.pdb
