@@ -10,6 +10,8 @@
     <Compile Remove="Migrations\20201030141900_InitialMigration.Designer.cs" />
     <Compile Remove="Migrations\20201030141921_SubjectStudent.cs" />
     <Compile Remove="Migrations\20201030141921_SubjectStudent.Designer.cs" />
+    <Compile Remove="Migrations\20201030143054_SubjectStudent.cs" />
+    <Compile Remove="Migrations\20201030143054_SubjectStudent.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,6 +20,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

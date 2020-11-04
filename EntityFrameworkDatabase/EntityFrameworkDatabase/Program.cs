@@ -17,6 +17,15 @@ namespace EntityFrameworkDatabase
         {
             Console.WriteLine("Hello Entity!");
 
+            //CreateDB();
+
+            ReadDB();
+
+        }
+
+
+        static void CreateDB()
+        {
             List<Subject> subjects = new List<Subject>()
             {
                 new Subject() { SubjectName = "Operating Systems" },
@@ -66,8 +75,36 @@ namespace EntityFrameworkDatabase
 
                 db.SaveChanges();
             }
-
         }
+
+        static void ReadDB()
+        {
+            using (BloggingDbContext db = new BloggingDbContext())
+            {
+                List<SubjectStudent> subjectStudents = new List<SubjectStudent>(db.SubjectStudents);
+
+                foreach (var subjectStudent in subjectStudents)
+                {
+                    var studentName = (from st in db.Students
+                                       where st.StudentId == subjectStudent.StudentId
+                                       select st.StudentName).First();
+
+
+                    var subjectName = (from sub in db.Subjects
+                                       where sub.SubjectId == subjectStudent.SubjectId
+                                       select sub.SubjectName).First();
+
+
+                    Console.Write(studentName + " student's grade in subject " + subjectName + " is  ");
+
+                    subjectStudent.Grade = Convert.ToDouble(Console.ReadLine());
+
+                }
+
+                db.SaveChanges();
+            }
+        }
+
     }
 
 
@@ -116,6 +153,8 @@ namespace EntityFrameworkDatabase
         public int SubjectId { set; get; }
 
         public virtual Subject Subject { set; get; }
+
+        public double? Grade { set; get; }
 
     }
 

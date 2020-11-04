@@ -2,7 +2,7 @@
 
 namespace EntityFrameworkDatabase.Migrations
 {
-    public partial class SubjectStudent : Migration
+    public partial class mig1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -39,7 +39,8 @@ namespace EntityFrameworkDatabase.Migrations
                     SubjectStudentId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StudentId = table.Column<int>(nullable: false),
-                    SubjectId = table.Column<int>(nullable: false)
+                    SubjectId = table.Column<int>(nullable: false),
+                    Grade = table.Column<double>(nullable: true)
                 },
                 constraints: table =>
                 {
