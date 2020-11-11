@@ -3,20 +3,30 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.IdentityModel.Tokens;
 
 namespace MidtermExam
 {
+    public class StaticClass
+    {
+        public static readonly List<string> studentNames = new List<string> { "Archil", "Ana", "Eka", "Giorgi", "Malxaz",
+            "Nikoloz", "Ana", "Vaxtang", "Mari", "Rakanishu" };
+        public static readonly int studentNamesCount = 10;
+        public static readonly List<Subject> subjects = new List<Subject>()
+            {
+                new Subject() { SubjectId = 1, SubjectName = "Operating Systems" },
+                new Subject() { SubjectId = 2, SubjectName = "Security" },
+                new Subject() { SubjectId = 3, SubjectName = "Databases" },
+                new Subject() { SubjectId = 4, SubjectName = ".NET" },
+                new Subject() { SubjectId = 5, SubjectName = "Web" },
+            };
+    }
+
     class Program
     {
-
-        static List<string> studentNames = new List<string> { "Archil", "Ana", "Eka", "Giorgi", "Malxaz",
-            "Nikoloz", "Ana", "Vaxtang", "Mari", "Rakanishu" };
-        static readonly int studentNamesCount = 10;
-
         static void Main(string[] args)
         {
-            HasData();
+            //HasData();
 
             string path = @"data.csv";
             IEnumerable<string> data;
@@ -104,58 +114,51 @@ namespace MidtermExam
         }
 
 
-        static void HasData()
-        {
-            List<Subject> subjects = new List<Subject>()
-            {
-                new Subject() { SubjectName = "Operating Systems" },
-                new Subject() { SubjectName = "Security" },
-                new Subject() { SubjectName = "Databases" },
-                new Subject() { SubjectName = ".NET" },
-                new Subject() { SubjectName = "Web" },
-            };
+        //static void HasData()
+        //{
 
-            Random randomGenerator = new Random();
 
-            List<Student> students = new List<Student>();
+        //    Random randomGenerator = new Random();
 
-            for (int i = 0; i < 50; i++)
-            {
-                Student student = new Student()
-                {
-                    StudentName = studentNames[randomGenerator.Next(studentNamesCount)]
-                };
+        //    List<Student> students = new List<Student>();
 
-                List<SubjectStudent> subjectStudent = new List<SubjectStudent>();
+        //    for (int i = 0; i < 50; i++)
+        //    {
+        //        Student student = new Student()
+        //        {
+        //            StudentName = StaticClass.studentNames[randomGenerator.Next(StaticClass.studentNamesCount)]
+        //        };
 
-                for (int j = 0; j < 2; j++)
-                {
-                    int subjectId = randomGenerator.Next(5);
-                    for (int k = 0; k < j; k++)
-                    {
-                        while (subjects[subjectId].SubjectName == subjectStudent[k].Subject.SubjectName)
-                        {
-                            subjectId = randomGenerator.Next(5);
-                            k = 0;
-                        }
-                    }
-                    subjectStudent.Add(new SubjectStudent() { Student = student, Subject = subjects[subjectId] });
-                }
+        //        List<SubjectStudent> subjectStudent = new List<SubjectStudent>();
 
-                student.Subjects = subjectStudent;
-                students.Add(student);
-            }
+        //        for (int j = 0; j < 2; j++)
+        //        {
+        //            int subjectId = randomGenerator.Next(5);
+        //            for (int k = 0; k < j; k++)
+        //            {
+        //                while (StaticClass.subjects[subjectId].SubjectName == subjectStudent[k].Subject.SubjectName)
+        //                {
+        //                    subjectId = randomGenerator.Next(5);
+        //                    k = 0;
+        //                }
+        //            }
+        //            subjectStudent.Add(new SubjectStudent() { Student = student, Subject = StaticClass.subjects[subjectId] });
+        //        }
 
-            using (BloggingDbContext db = new BloggingDbContext())
-            {
-                foreach (var student in students)
-                {
-                    db.Students.Add(student);
-                }
+        //        student.Subjects = subjectStudent;
+        //        students.Add(student);
+        //    }
 
-                db.SaveChanges();
-            }
-        }
+        //    using (BloggingDbContext db = new BloggingDbContext())
+        //    {
+        //        foreach (var student in students)
+        //        {
+        //            db.Students.Add(student);
+        //        }
+
+        //        db.SaveChanges();
+        //    }
+        //}
 
 
     }
@@ -172,7 +175,56 @@ namespace MidtermExam
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("server=RGN7_64-PC\\SQLEXPRESS;database=TSU_DB_local;Integrated security=true;");
+            optionsBuilder.EnableSensitiveDataLogging(true);
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            Random randomGenerator = new Random();
+
+            List<Student> students = new List<Student>();
+
+            List<SubjectStudent> subjectStudentsTotal = new List<SubjectStudent>();
+
+            for (int i = 0; i < 50; i++)
+            {
+                Student student = new Student()
+                {
+                    StudentId = i + 1,
+                    StudentName = StaticClass.studentNames[randomGenerator.Next(StaticClass.studentNamesCount)]
+                };
+
+                List<SubjectStudent> subjectStudent = new List<SubjectStudent>();
+
+                for (int j = 0; j < 2; j++)
+                {
+                    int subjectId = randomGenerator.Next(5);
+                    for (int k = 0; k < j; k++)
+                    {
+                        while (StaticClass.subjects[subjectId].SubjectName == StaticClass.subjects[subjectStudent[k].SubjectId - 1].SubjectName)
+                        {
+                            subjectId = randomGenerator.Next(5);
+                            k = 0;
+                        }
+                    }
+                    subjectStudent.Add(new SubjectStudent()
+                    {
+                        SubjectStudentId = (i * 2) + 1 + j,
+                        StudentId = student.StudentId,
+                        SubjectId = subjectId + 1,
+                        Point = null
+                    });
+                    subjectStudentsTotal.Add(subjectStudent[j]);
+                }
+                students.Add(student);
+            }
+
+            modelBuilder.Entity<Subject>().HasData(StaticClass.subjects);
+            modelBuilder.Entity<Student>().HasData(students);
+            modelBuilder.Entity<SubjectStudent>().HasData(subjectStudentsTotal);
+        }
+
+
     }
 
     public class Student
@@ -201,11 +253,11 @@ namespace MidtermExam
 
         public int StudentId { set; get; }
 
-        public virtual Student Student { set; get; }
+        //public virtual Student Student { set; get; }
 
         public int SubjectId { set; get; }
 
-        public virtual Subject Subject { set; get; }
+        //public virtual Subject Subject { set; get; }
 
         public int? Point { set; get; }
 
